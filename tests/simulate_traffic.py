@@ -1,11 +1,15 @@
 import requests
 import time
 import random
+from datetime import datetime, timedelta, timezone
+from uuid import uuid4
 
 BASE_URL = "http://localhost:8000"
 
 def simulate_traffic():
-    services = ["order-service", "payment-service", "user-service"]
+    run_id = uuid4().hex[:8]
+    services = [f"{name}-{run_id}" for name in ["order-service", "payment-service", "user-service"]]
+    start = datetime.now(timezone.utc) - timedelta(minutes=20)
     
     # Scenarios
     scenarios = [
@@ -18,7 +22,7 @@ def simulate_traffic():
     
     try:
         # Check health
-        resp = requests.get(f"{BASE_URL}/health")
+        resp = requests.get(f"{BASE_URL}/health", timeout=5)
         if resp.status_code != 200:
             print("API is not healthy")
             return
@@ -29,14 +33,16 @@ def simulate_traffic():
             
             payload = {
                 "service_id": service,
-                "timestamp": str(time.time()),
+                "timestamp": (start + timedelta(minutes=i)).isoformat(),
+                "interval_seconds": 60,
                 "latency_ms": scenario["latency"],
                 "error_count": scenario["error_count"],
                 "request_count": scenario["request_count"]
             }
             
             try:
-                resp = requests.post(f"{BASE_URL}/metrics", json=payload)
+                resp = requests.post(f"{BASE_URL}/metrics", json=payload, timeout=5)
+                resp.raise_for_status()
                 data = resp.json()
                 print(f"[{service}] Input: lat={scenario['latency']}, err={scenario['error_count']} -> Result: {data['health_state']} | Action: {data['action']}")
             except Exception as e:

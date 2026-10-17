@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RHDE · Release review</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header><a href="/" class="brand"><span class="mark">R</span> RHDE <span class="divider">/</span> <span class="muted">Release review</span></a><span class="tag">Advisory mode</span></header>
+  <main>
+    <aside>
+      <div class="section-heading"><h2>Deployments</h2><button id="refresh" type="button" aria-label="Refresh deployments and analysis">Refresh</button></div>
+      <p class="muted small">Select a release to review its impact.</p>
+      <nav id="deployments" aria-label="Deployments"></nav>
+    </aside>
+    <section class="content">
+      <p id="status" role="status" aria-live="polite">Loading deployments…</p>
+      <div id="empty" hidden><h1>Start with a release.</h1><p>Once deployment events and service metrics are recorded, review the evidence here.</p></div>
+      <article id="incident" hidden>
+        <p class="eyebrow">DEPLOYMENT ANALYSIS</p>
+        <h1 id="service"></h1>
+        <p id="release" class="muted"></p>
+        <section class="recommendation" id="recommendation" aria-labelledby="decision">
+          <p class="eyebrow">RECOMMENDED NEXT STEP</p><h2 id="decision"></h2><ul id="reasons"></ul>
+          <p class="small muted">A correlation in timing is evidence to investigate, not proof of cause.</p>
+        </section>
+        <section class="panel">
+          <div class="section-heading"><h2>Before &amp; after</h2><span class="muted small">10-minute windows</span></div>
+          <div class="table-scroll"><table><thead><tr><th scope="col">Metric</th><th scope="col">Before release</th><th scope="col">After release</th></tr></thead><tbody id="comparison"></tbody></table></div>
+          <ul id="evidence" class="small muted"></ul>
+        </section>
+        <section class="panel">
+          <div class="section-heading"><h2>Release timeline</h2><span class="muted small">Dashed line = deployment</span></div>
+          <p class="small muted">Bucket averages · timestamps displayed in UTC · gaps mean missing observations</p>
+          <div id="charts"></div>
+        </section>
+        <div class="bottom-grid">
+          <section class="panel"><h2>Before taking action</h2><ol id="checks"></ol></section>
+          <section class="panel"><h2>How to read this result</h2><ul id="limitations" class="small muted"></ul><details><summary>Analysis rules</summary><p id="rules" class="small muted"></p></details></section>
+        </div>
+      </article>
+    </section>
+  </main>
+  <footer>RHDE · Release decision support. Actions stay with your team.</footer>
+</body>
+</html>
